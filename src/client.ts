@@ -34,6 +34,8 @@ client.on('data', (data) => {
     console.log(`[${parsedMessage.nickname}] ${parsedMessage.message}`);
   } else if (parsedMessage.type === 'user-list') {
     console.log('Usuários conectados:', parsedMessage.data.join(', '));
+    rl.setPrompt('> ');
+    rl.prompt();
   }
 });
 
@@ -52,5 +54,6 @@ const startChat = () => {
     } else {
       client.write(JSON.stringify({ type: 'message', data: input }) + '\n');
     }
+    rl.prompt(); 
   });
 };

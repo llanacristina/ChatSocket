@@ -1,5 +1,11 @@
 import net from 'net';
 
+// Definição das cores ANSI
+const colors = {
+  reset: '\x1b[0m',
+  yellow: '\x1b[33m',
+};
+
 interface Client {
   socket: net.Socket;
   nickname?: string;
@@ -38,7 +44,7 @@ const server = net.createServer((socket) => {
 
     if (parsedMessage.type === 'nickname') {
       client.nickname = parsedMessage.data;
-      console.log(`Client connected with nickname: ${client.nickname}`);
+      console.log(`${colors.yellow}Cliente conectado com nome: ${client.nickname} ${colors.reset}`);
 
       clients.forEach((c) => {
         c.socket.write(JSON.stringify({
@@ -53,7 +59,7 @@ const server = net.createServer((socket) => {
     if (parsedMessage.type === 'update-nickname') {
       const oldNickname = client.nickname;
       client.nickname = parsedMessage.data;
-      console.log(`${oldNickname} changed nickname to ${client.nickname}`);
+      console.log(`${oldNickname} alterado para ${client.nickname}`);
 
       clients.forEach((c) => {
         c.socket.write(JSON.stringify({
@@ -102,7 +108,7 @@ const server = net.createServer((socket) => {
   });
 
   socket.on('end', () => {
-    console.log(`Client ${client.nickname || 'Unknown'} disconnected`);
+    console.log(`${colors.yellow}Cliente ${client.nickname || 'Unknown'} desconectado ${colors.reset}`);
     clients.splice(clients.indexOf(client), 1);
 
     clients.forEach((c) => {
