@@ -11,32 +11,28 @@ const rl = readline.createInterface({
 const colors = {
   reset: '\x1b[0m',
   yellow: '\x1b[33m',
-
 };
 
 client.connect(3000, 'localhost', () => {
   console.log('Connected to server');
-  
+
   rl.question('Enter your nickname: ', (nickname) => {
-    client.write(JSON.stringify({ type: 'nickname', data: nickname }) + '\n');
+    client.write(`!nick ${nickname}\n`);
     startChat();
   });
 });
 
 client.on('data', (data) => {
   const message = data.toString().trim();
-  const parsedMessage = JSON.parse(message);
-  
-  if (parsedMessage.type === 'system') {
-    console.log(`${colors.yellow}[System] ${parsedMessage.message}${colors.reset}`);
 
-  } else if (parsedMessage.type === 'message') {
-    console.log(`[${parsedMessage.nickname}] ${parsedMessage.message}`);
-  } else if (parsedMessage.type === 'user-list') {
-    console.log('Usuários conectados:', parsedMessage.data.join(', '));
-    rl.setPrompt('> ');
-    rl.prompt();
-  }
+  if (message.startsWith('!msg ')) {
+    console.log(message.substring(5));
+  } else if (message.startsWith('!changenickname ')) {
+    console.log(`${colors.yellow}${message.substring(16)}${colors.reset}`);
+  } else if (message.startsWith('!poke ')) {
+    console.log(`${colors.yellow}${message.substring(6)}${colors.reset}`);
+  } else if (message.startsWith('!users ')) {
+    console.log(`${colors.yellow}Usuários conectados: ${message.substring(7)}${colors.reset}`);  }
 });
 
 client.on('close', () => {
@@ -47,13 +43,13 @@ const startChat = () => {
   rl.on('line', (input) => {
     if (input.startsWith('/nick ')) {
       const newNickname = input.substring(6);
-      client.write(JSON.stringify({ type: 'update-nickname', data: newNickname }) + '\n');
+      client.write(`!changenickname ${newNickname}\n`);
     } else if (input.startsWith('/poke ')) {
       const targetNickname = input.substring(6);
-      client.write(JSON.stringify({ type: 'poke', data: targetNickname }) + '\n');
+      client.write(`!poke ${targetNickname}\n`);
     } else {
-      client.write(JSON.stringify({ type: 'message', data: input }) + '\n');
+      client.write(`!sendmsg ${input}\n`);
     }
-    rl.prompt(); 
+    rl.prompt();
   });
 };
