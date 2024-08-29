@@ -17,7 +17,7 @@ client.connect(3000, 'localhost', () => {
   console.log('Connected to server');
 
   rl.question('Enter your nickname: ', (nickname) => {
-    client.write(`!nick ${nickname}\n`);
+    client.write(`!nick ${nickname}`);
     startChat();
   });
 });
@@ -28,7 +28,7 @@ client.on('data', (data) => {
   if (message.startsWith('!msg ')) {
     console.log(message.substring(5));
   } else if (message.startsWith('!changenickname ')) {
-    console.log(`${colors.yellow}${message.substring(16)}${colors.reset}`);
+    console.log(`${colors.yellow} ${message.substring(16)} ${colors.reset}`);
   } else if (message.startsWith('!poke ')) {
     console.log(`${colors.yellow}${message.substring(6)}${colors.reset}`);
   } else if (message.startsWith('!users ')) {
@@ -41,14 +41,14 @@ client.on('close', () => {
 
 const startChat = () => {
   rl.on('line', (input) => {
-    if (input.startsWith('/nick ')) {
-      const newNickname = input.substring(6);
-      client.write(`!changenickname ${newNickname}\n`);
-    } else if (input.startsWith('/poke ')) {
+    if (input.startsWith('!changenickname ')) {
+      const newNickname = input.substring(16);
+      client.write(`!changenickname ${newNickname}`);
+    } else if (input.startsWith('!poke ')) {
       const targetNickname = input.substring(6);
-      client.write(`!poke ${targetNickname}\n`);
+      client.write(`!poke ${targetNickname}`);
     } else {
-      client.write(`!sendmsg ${input}\n`);
+      client.write(`!sendmsg ${input}`);
     }
     rl.prompt();
   });

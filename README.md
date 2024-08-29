@@ -48,7 +48,7 @@ Além de enviar mensagens normais, este chat suporta alguns comandos específico
 
 Para cutucar um usuário específico, digite no terminal:
 ```
-/poke nome-do-usuario
+!poke nome-do-usuario
 ```
 Isso enviará uma mensagem informando que você cutucou o usuário especificado.
 
@@ -57,7 +57,7 @@ Isso enviará uma mensagem informando que você cutucou o usuário especificado.
 Para alterar o seu nome de usuário, utilize o comando:
 
 ```
-/nick novo-nome
+!changenickname novo-nome
 ```
 
 >***Observação:*** Este projeto é uma implementação simples de um chat usando o módulo `net` do Node.js, sem interface gráfica. Tudo acontece no terminal, e você pode testar o chat abrindo múltiplos terminais, conectando-os ao servidor.

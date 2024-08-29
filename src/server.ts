@@ -21,13 +21,13 @@ const broadcastUserList = () => {
   const nicknames = getConnectedNicknames();
   const userListMessage = `!users [${nicknames.length}] ${nicknames.join(' / ')}`;
   clients.forEach((client) => {
-    client.socket.write(`${userListMessage}`);
+    client.socket.write(userListMessage);
   });
 };
 
 const printUserList = () => {
   const nicknames = getConnectedNicknames();
-  console.log(`Usuários conectados: [${nicknames.length}] ${nicknames.join(', ')}`);
+  console.log(`[!users ${nicknames.length}] : ${nicknames.join(', ')}`);
 };
 
 const server = net.createServer((socket) => {
@@ -61,7 +61,7 @@ const server = net.createServer((socket) => {
       const oldNickname = client.nickname;
       if (newNickname && oldNickname) {
         client.nickname = newNickname;
-        console.log(`${oldNickname} alterado para ${client.nickname}`);
+        console.log(`${colors.yellow}${oldNickname} alterado para ${client.nickname}${colors.reset}`);
 
         clients.forEach((c) => {
           c.socket.write(`!msg ${oldNickname} alterado para ${client.nickname}`);
@@ -80,7 +80,7 @@ const server = net.createServer((socket) => {
 
         clients.forEach((c) => {
           if (c !== client) {
-            c.socket.write(`!msg [${client.nickname}]: ${msg}`);
+            c.socket.write(`!msg ${displayMessage}`);
           }
         });
       }
@@ -91,7 +91,7 @@ const server = net.createServer((socket) => {
       const targetClient = clients.find((c) => c.nickname === targetNickname);
 
       if (targetClient && client.nickname) {
-        const pokeMessage = `${client.nickname} cutucou ${targetClient.nickname}`;
+        const pokeMessage = `${colors.yellow}${client.nickname} cutucou ${targetClient.nickname}${colors.reset}`;
         clients.forEach((c) => {
           c.socket.write(`!poke ${pokeMessage}`);
         });
